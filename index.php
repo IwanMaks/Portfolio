@@ -28,10 +28,9 @@ $projectListData = $connection->query("SELECT * FROM projectlist");
     <link rel="shortcut icon" href="favicon.ico">  
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,400italic,300italic,300,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
     <!-- Global CSS -->
-    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">   
+    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
     <!-- Plugins CSS -->
     <link rel="stylesheet" href="assets/plugins/font-awesome/css/font-awesome.css">
-    
     <!-- Theme CSS -->  
     <link id="theme-style" rel="stylesheet" href="assets/css/styles-5.css">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -54,12 +53,12 @@ $projectListData = $connection->query("SELECT * FROM projectlist");
                 <ul class="list-unstyled contact-list">
                     <li class="email"><i class="fa fa-envelope"></i><a href="mailto: <?= $aboutData['email']?>"><?= $aboutData['email']?></a></li>
                     <li class="phone"><i class="fa fa-phone"></i><a href="tel:<?= $aboutData['phone']?>"><?= $aboutData['phone']?></a></li>
-                    <li class="website"><i class="fa fa-globe"></i><a href="<?= $aboutData['name']?>" target="_blank"><?= $aboutData['site']?></a></li>
-                    <li class="github"><i class="fa fa-github"></i><a href="#" target="_blank">github.com/username</a></li>
+                    <li class="website"><i class="fa fa-globe"></i><a href="<?= $aboutData['site']?>" target="_blank">Site</a></li>
+                    <li class="github"><i class="fa fa-github"></i><a href="<?= $aboutData['github']?>" target="_blank">GitHub</a></li>
                 </ul>
             </div><!--//contact-container-->
             <div class="education-container container-block">
-                <h2 class="container-block-title">Education</h2>
+                <h2 class="container-block-title">Образование</h2>
                 <? foreach ($educationData as $education): ?>
                 <div class="item">
                     <h4 class="degree"><?= $education['faculty'] ?></h4>
@@ -70,7 +69,7 @@ $projectListData = $connection->query("SELECT * FROM projectlist");
             </div><!--//education-container-->
             
             <div class="languages-container container-block">
-                <h2 class="container-block-title">Languages</h2>
+                <h2 class="container-block-title">Языки</h2>
                 <ul class="list-unstyled interests-list">
                     <? foreach ($languagesData as $lang): ?>
                     <li><?= $lang['tittle']?> <span class="lang-desc"><?= $lang['level']?></span></li>
@@ -79,7 +78,7 @@ $projectListData = $connection->query("SELECT * FROM projectlist");
             </div><!--//interests-->
             
             <div class="interests-container container-block">
-                <h2 class="container-block-title">Interests</h2>
+                <h2 class="container-block-title">Интересы</h2>
                 <ul class="list-unstyled interests-list">
                     <? foreach ($interestsData as $int): ?>
                     <li><?= $int['tittle']?></li>
@@ -135,7 +134,7 @@ $projectListData = $connection->query("SELECT * FROM projectlist");
             </section><!--//section-->
             
             <section class="skills-section section">
-                <h2 class="section-title"><i class="fa fa-rocket"></i>Skills &amp; Proficiency</h2>
+                <h2 class="section-title"><i class="fa fa-rocket"></i>Навыки</h2>
                 <div class="skillset">
                     <? foreach ($skillsListData as $skill): ?>
                     <div class="item">
@@ -148,26 +147,36 @@ $projectListData = $connection->query("SELECT * FROM projectlist");
                     <? endforeach; ?>
                 </div>  
             </section><!--//skills-section-->
-            <form action="" method="POST">
-                <input type="text" name="comment" required>
-                <input type="submit">
+            <h2 class="section-title"><i class="fa fa-comment"></i>Комментарии <small>(все комментарии проходят модерацию)</small></h2>
+            <form action="addComment.php" method="POST">
+                <div class="form-group">
+                    <label for="formGroupExampleInput">Ваше имя</label>
+                    <input type="text" name="name" class="form-control" id="formGroupExampleInput" placeholder="Анонимный Лис">
+                </div>
+                <div class="form-group">
+                    <label for="formGroupExampleInput2">Ваш комментарий</label>
+                    <input type="text" name="comment" class="form-control" id="formGroupExampleInput2" placeholder="Классный разработчик">
+                </div>
+                <button class="btn btn-primary" style="background-color: #FDA246; border: 1px solid #FDA246;"> Отправить </button>
             </form>
+            <br/>
 
+            <ul class="list-group">
             <?
-                if ($_POST['comment']) {
-                    $newComment = $_POST['comment'];
-                    $connection->query("INSERT INTO comments (comment) VALUE ('$newComment')");
-                }
+
                 $allComments = $connection->query("SELECT * FROM comments ");
 
                 if ($allComments) {
                     foreach ($allComments as $comment) {
-                        echo "<div>" . $comment['comment'] . "</div>";
+                        if ($comment['check'] === 'check') {
+                            echo "<li class='list-group-item'><b>" . $comment['name'] . "</b> оставил(а) комментарий: <b>" . $comment['comment'] . "</b></li>";
+                        }
                     }
                 }  else {
-                    echo "<div>Здесь пока нет никаких комментариев :(</div>";
+                    echo "<li class='list-group-item'>Здесь пока нет никаких комментариев :(</li>";
                 }
             ?>
+            </ul>
 
         </div><!--//main-body-->
     </div>
